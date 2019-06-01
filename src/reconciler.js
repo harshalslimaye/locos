@@ -1,15 +1,27 @@
+import { isFunction } from './utils';
+
 export function render(vElement, container, oldElement) {
   diff(vElement, container, oldElement);
 }
 
 function diff(vElement, container, oldElement) {
+  console.log(vElement);
   if (!oldElement) {
     mount(vElement, container);
   }
 }
 
 function mount(vElement, container) {
-  return mountElement(vElement, container);
+  if (isFunction(vElement.type)) {
+    return mountComponent(vElement, container);
+  } else {
+    return mountElement(vElement, container);
+  }
+}
+
+function mountComponent(vElement, container) {
+  let newVElement = vElement.type();
+  mountElement(newVElement, container);
 }
 
 function mountElement(vElement, container) {
