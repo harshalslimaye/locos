@@ -1,0 +1,21 @@
+const path = require('path');
+
+module.exports = {
+  mode: 'production',
+  entry: './src/locos.js',
+  output: {
+    filename: 'locos.js',
+    path: path.join(__dirname, '/../dist'),
+    library: 'locos',
+    libraryTarget: 'umd'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
+    ]
+  } 
+};

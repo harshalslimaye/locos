@@ -4,8 +4,8 @@
   "description": "",
   "main": "dist/locos.js",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "build": "webpack --config config/webpack.prod.js",
+    "watch": "webpack --watch --config config/webpack.dev.js"
   },
   "repository": {
     "type": "git",

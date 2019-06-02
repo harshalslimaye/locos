@@ -8,30 +8,41 @@ function diff(vElement, container, oldElement) {
   if (!oldElement) {
     mount(vElement, container);
   } else {
-    update(vElement, oldElement);
+    update(vElement, oldElement, container);
   }
 }
 
-function update(vElement, oldElement) {
+function update(vElement, oldElement, container) {
   if (isFunction(vElement.type)) {
-    
+    updateComponent(vElement, oldElement, container);
   } else {
-    updateElement(vElement, oldElement);
+    updateElement(vElement, oldElement, container);
   }
 }
 
-function updateElement(vElement, oldElement) {
-  const oldVElement = oldElement._virtualElement;
+function updateComponent(vElement, oldElement, container) {
+  updateElement(vElement.type(vElement.props), oldElement, container);
+}
 
-  if (vElement.type === oldVElement.type) {
-    if (vElement.type === 'text') {
-      if (oldVElement.props.textContent !== vElement.props.textContent) {
-        oldElement.textContent = vElement.props.textContent;
+function updateElement(vElement, oldElement, container) {
+  if (oldElement) {
+    const oldVElement = oldElement._virtualElement;
+    if (vElement.type === oldVElement.type) {
+      if (vElement.type === 'text') {
+        if (oldVElement.props.textContent !== vElement.props.textContent) {
+          oldElement.textContent = vElement.props.textContent;
+        }
+      } else {
+        updateAttributes(oldElement, vElement, oldVElement);
+        vElement.children.forEach((child, i) => update(child, oldElement.childNodes[i], oldElement));
       }
     } else {
-      updateAttributes(oldElement, vElement, oldVElement);
-      vElement.children.forEach((child, i) => update(child, oldElement.childNodes[i]));
+      mountElement(vElement, container, oldElement.nextSibling);
+      oldElement.remove()
     }
+  } else {
+    console.log(container);
+    mountElement(vElement, container);
   }
 }
 
@@ -47,7 +58,24 @@ function mountComponent(vElement, container) {
   mountElement(vElement.type(vElement.props), container);
 }
 
-function mountElement(vElement, container) {
+function mountElement(vElement, container, nextSibling) {
+  let newElement = generateElement(vElement);
+
+  newElement._virtualElement = vElement;
+  if (nextSibling) {
+    container.insertBefore(newElement, nextSibling);
+  } else {
+    container.appendChild(newElement);
+  }
+
+  if (vElement.children && vElement.children.length > 0) {
+    vElement.children.forEach(child => mount(child, newElement));
+  }
+
+  return newElement;
+}
+
+function generateElement(vElement) {
   let newElement = null;
 
   if (vElement.type === 'text') {
@@ -57,12 +85,7 @@ function mountElement(vElement, container) {
     updateAttributes(newElement, vElement, {});
   }
 
-  newElement._virtualElement = vElement;
-  container.appendChild(newElement);
-
-  if (vElement.children && vElement.children.length > 0) {
-    vElement.children.forEach(child => mount(child, newElement));
-  }
+  return newElement
 }
 
 function updateAttributes(newElement, vElement, oldVElement) {
