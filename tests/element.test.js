@@ -12,7 +12,7 @@ describe('element.js', () => {
       }
     ]
   };
-  test('hello', () => {
+  test('should create a new element', () => {
     expect(createElement(el.type, el.props, 'Hello')).toEqual(el);
   });
 });
