@@ -44,7 +44,7 @@ function mount(vElement, container) {
 }
 
 function mountComponent(vElement, container) {
-  mountElement(vElement.type(), container);
+  mountElement(vElement.type(vElement.props), container);
 }
 
 function mountElement(vElement, container) {
