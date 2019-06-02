@@ -8,6 +8,9 @@ module.exports = {
     library: 'locos',
     libraryTarget: 'umd'
   },
+  optimization: {
+		minimize: false
+	},
   module: {
     rules: [
       {
