@@ -41,7 +41,6 @@ function updateElement(vElement, oldElement, container) {
       oldElement.remove()
     }
   } else {
-    console.log(container);
     mountElement(vElement, container);
   }
 }

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --config config/webpack.prod.js",
     "watch": "webpack --watch --config config/webpack.dev.js",
-    "coverage": "jest --coverage --passWithNoTests"
+    "coverage": "jest --coverage --passWithNoTests",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
